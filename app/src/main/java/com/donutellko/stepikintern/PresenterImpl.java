@@ -3,6 +3,7 @@ package com.donutellko.stepikintern;
 import android.util.Log;
 
 import com.donutellko.stepikintern.api.Course;
+import com.donutellko.stepikintern.api.Meta;
 import com.donutellko.stepikintern.api.SearchRequestResult;
 import com.donutellko.stepikintern.mvp.IModel;
 import com.donutellko.stepikintern.mvp.IPresenter;
@@ -55,11 +56,10 @@ public class PresenterImpl implements IPresenter {
     public void appendSearch() {
         Log.i("Presenter.appendSearch", "lastSearch=" + lastSearch + "; hasNext=" + hasNext);
 
-        if (isLoading || lastSearch == null || lastSearch != null && hasNext)
+        if (isLoading || lastSearch == null || pageNumber > 1 && !hasNext)
             return;
 
         isLoading = true;
-        view.showUpdating(true);
 
         Log.i("Presenter.appendSearch", "searching...");
         App.getStepikApi().getSearchResults(lastSearch, pageNumber).enqueue(new Callback<SearchRequestResult>() {
@@ -73,6 +73,9 @@ public class PresenterImpl implements IPresenter {
 
                 List<Course> courses = new ArrayList<>();
                 SearchRequestResult requestResult = response.body();
+
+                assert requestResult != null;
+                hasNext = requestResult.getMeta().getHasNext();
 
                 for (Course c : requestResult.getCourses()) {
                     if (c.getCourseTitle() != null)
@@ -98,10 +101,11 @@ public class PresenterImpl implements IPresenter {
 
             @Override
             public void onFailure(Call<SearchRequestResult> call, Throwable t) {
-                if (t.getMessage().contains("Unable to resolve"))
+                if (t.getMessage().contains("Unable to resolve")) {
                     view.showNoConnection();
-                else
+                } else {
                     view.showError(t);
+                }
 
                 t.printStackTrace();
 
@@ -141,4 +145,11 @@ public class PresenterImpl implements IPresenter {
     public boolean hasNext() {
         return hasNext;
     }
+
+    @Override
+    public int getPageNumber() {
+        return pageNumber;
+    }
+
+
 }

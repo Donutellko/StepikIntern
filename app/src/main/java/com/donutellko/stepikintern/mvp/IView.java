@@ -30,11 +30,6 @@ public interface IView {
     void showText(String message);
 
     /**
-     * Отобразить изначальное состояние (приглашение ввести запрос или вывести Favorites)
-     */
-    void showInitial();
-
-    /**
      * Отобразить информацию о том, что поиск не принёс результатов
      */
     void showEmptyList();
@@ -45,6 +40,12 @@ public interface IView {
      * @param t Throwable, который был возвращён.
      */
     void showError(Throwable t);
+
+    /**
+     * Отобразить уведомление, не скрывая имеющиеся результаты
+     * @param text
+     */
+    void showNotification(String text);
 
     /**
      * Сообщить о том, что не удалось подключиться

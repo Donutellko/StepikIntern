@@ -20,20 +20,7 @@ class ModelImpl implements IModel {
 
     @Override
     public void getStarred() {
-        List<Course> starred = new ArrayList<>();
-
-
-        presenter.showStarred(starred);
-    }
-
-    @Override
-    public void addStarred(Course course) {
-
-    }
-
-    @Override
-    public void removeStarred(Course course) {
-
+        presenter.showStarred(starredList);
     }
 
     @Override

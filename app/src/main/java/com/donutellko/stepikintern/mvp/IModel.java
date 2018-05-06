@@ -10,15 +10,8 @@ public interface IModel {
     void getStarred();
 
     /**
-     * Добавляет курс в избранное
+     * Добавляет или удаляет курс из избранного
      */
-    void addStarred(Course course);
-
-    /**
-     * Удаляет курс из избранного
-     */
-    void removeStarred(Course course);
-
     void setStarred(Course course, boolean b);
 
     boolean isStarred(Course course);

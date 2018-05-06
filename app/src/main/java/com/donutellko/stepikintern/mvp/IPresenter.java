@@ -38,4 +38,6 @@ public interface IPresenter {
     void setStarred(Course course, boolean b);
 
     boolean hasNext();
+
+    int getPageNumber();
 }
