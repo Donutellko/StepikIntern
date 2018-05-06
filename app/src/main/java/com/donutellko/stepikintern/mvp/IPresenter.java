@@ -7,19 +7,34 @@ import java.util.List;
 public interface IPresenter {
 
     /**
-     * Отобразить результат поискового запроса
+     * Получить результат поискового запроса
      *
      * @param query текст поискового запроса
      */
-    void showSearch(String query);
+    void getSearch(String query);
+
+    /**
+     * Отобразить результат запроса и его информацию
+     */
+    void showSearch(List<Course> courses, String query);
+
+    /**
+     * Получить повторно результат прошлого запроса
+     */
+    void getLastSearch();
 
     /**
      * Добавить определённую страницу поискового запроса в конец списка
      */
-    void appendSearch();
+    void getNextPage();
 
     /**
-     * Вывести список избранных
+     * Отобразить ещё одну страницу
+     */
+    void showNextPage(List<Course> courses);
+
+    /**
+     * Получить избранные
      */
     void getStarred();
 
@@ -37,7 +52,10 @@ public interface IPresenter {
 
     void setStarred(Course course, boolean b);
 
-    boolean hasNext();
+
+    boolean getHasNext();
 
     int getPageNumber();
+
+    void showError(Throwable t);
 }

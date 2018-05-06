@@ -1,6 +1,7 @@
 package com.donutellko.stepikintern;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.donutellko.stepikintern.api.Course;
+import com.donutellko.stepikintern.mvp.IModel;
 import com.donutellko.stepikintern.mvp.IPresenter;
 import com.donutellko.stepikintern.mvp.IView;
 
@@ -26,17 +28,37 @@ public class MainActivity extends CourseListActivity implements IView {
         super.onCreate(savedInstanceState);
         // setContentView вызван в суперклассе
 
-        presenter = new PresenterImpl(this);
+        App.AppState savedState = ((App) getApplicationContext()).getAppState();
+        if (savedState != null) {
+            // Восстанавливаем состояние модели
+            IModel model = savedState.model;
 
-        getStarred(); // изначально вывести избранное
+            presenter = new PresenterImpl(this, model);
+
+            presenter.getLastSearch();
+            // Восстанавливаем положение RecyclerView
+//            recyclerView.getLayoutManager().onRestoreInstanceState(savedState.recyclerState);
+        } else {
+            presenter = new PresenterImpl(this);
+            getStarred(); // изначально вывести избранное
+        }
+//        setVisibility(true, false, false, false, false);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        Parcelable recyclerState = recyclerView.getLayoutManager().onSaveInstanceState();
+        App.AppState savedState = new App.AppState(((PresenterImpl) presenter).getModel(), recyclerState);
+
+        ((App) getApplicationContext()).setAppState(savedState);
     }
 
     private void getStarred() {
         setTitle("Избранное");
 
         setVisibility(false, true, false, false, false);
-
-        setScrollListener();
 
         presenter.getStarred();
     }
@@ -94,7 +116,7 @@ public class MainActivity extends CourseListActivity implements IView {
         showUpdating(true);
         setTitle(query);
         showLoading();
-        presenter.showSearch(query);
+        presenter.getSearch(query);
     }
 
     @Override
@@ -103,11 +125,15 @@ public class MainActivity extends CourseListActivity implements IView {
     }
 
     @Override
-    public void showList(List<Course> courseList, boolean hasNext) {
+    public void showList(List<Course> courseList, String query) {
+        setTitle(query);
+
         if (courseList.size() == 0) {
             showEmptyList();
             return;
         }
+
+        setScrollListener();
 
         CourseListAdapter adapter = new CourseListAdapter(courseList, presenter);
 
@@ -156,7 +182,7 @@ public class MainActivity extends CourseListActivity implements IView {
     @Override
     public void showStarred(List<Course> starred) {
         if (starred.size() == 0) showText("Список избранного пуст.");
-        else showList(starred, false);
+        else showList(starred, "Избранное");
 
         setFabVisible(false);
     }
@@ -167,7 +193,7 @@ public class MainActivity extends CourseListActivity implements IView {
     }
 
     @Override
-    public void appendList(List<Course> courses, boolean hasNext) {
+    public void appendList(List<Course> courses) {
         CourseListAdapter adapter = (CourseListAdapter) recyclerView.getAdapter();
         adapter.appendCourses(courses);
         adapter.notifyDataSetChanged();
@@ -184,15 +210,16 @@ public class MainActivity extends CourseListActivity implements IView {
      * Устанавливает ScrollListener, вызывающий метод подгрузки следующей страницы
      */
     private void setScrollListener() {
+        recyclerView.clearOnScrollListeners();
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (!presenter.hasNext()) return;
+                if (!presenter.getHasNext()) return;
 
                 int toBottom = countToBottom();
                 if (toBottom <= 8) // Если пользователь приблизился к концу
-                    presenter.appendSearch(); // Подгружаем ещё страницу
+                    presenter.getNextPage(); // Подгружаем ещё страницу
                 if (toBottom <= 4) // Если пользователь уже почти в самом конце,
                     showUpdating(true); // Показываем ему, что будут ещё результаты
             }

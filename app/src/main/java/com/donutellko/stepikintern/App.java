@@ -1,9 +1,14 @@
 package com.donutellko.stepikintern;
 
 import android.app.Application;
-import android.content.Context;
+import android.os.Parcelable;
 
+import com.donutellko.stepikintern.api.Course;
 import com.donutellko.stepikintern.api.StepikApi;
+import com.donutellko.stepikintern.mvp.IModel;
+import com.donutellko.stepikintern.mvp.IPresenter;
+
+import java.util.List;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -12,10 +17,7 @@ public class App extends Application {
 
     private Retrofit retrofit;
     private static StepikApi stepikApi;
-
-    public Context getContext() {
-        return getApplicationContext();
-    }
+    private AppState appState;
 
     @Override
     public void onCreate() {
@@ -33,4 +35,21 @@ public class App extends Application {
         return stepikApi;
     }
 
+    public void setAppState(AppState appState) {
+        this.appState = appState;
+    }
+
+    public AppState getAppState() {
+        return appState;
+    }
+
+    static class AppState {
+        final IModel model;
+        final Parcelable recyclerState;
+
+        public AppState(IModel model, Parcelable recyclerState) {
+            this.model = model;
+            this.recyclerState = recyclerState;
+        }
+    }
 }

@@ -17,9 +17,9 @@ public interface IView {
      * Наполнить RecyclerView, скрыть ProgressBar или TextView и отобразить RecyclerView.
      *
      * @param courseList список.
-     * @param hasNext сообщает, может ли быть подгружена ещё одна страница
+     * @param query текст поискового запроса
      */
-    void showList(List<Course> courseList, boolean hasNext);
+    void showList(List<Course> courseList, String query);
 
     /**
      * Отобразить сообщение.
@@ -43,7 +43,6 @@ public interface IView {
 
     /**
      * Отобразить уведомление, не скрывая имеющиеся результаты
-     * @param text
      */
     void showNotification(String text);
 
@@ -68,9 +67,8 @@ public interface IView {
      * Добавляет в конец списка следующий набор страниц
      *
      * @param courses список добавляемых курсов
-     * @param hasNext имеется ли ещё одна страница
      */
-    void appendList(List<Course> courses, boolean hasNext);
+    void appendList(List<Course> courses);
 
     /**
      * Сообщает о том, что информация подгружается, не пряча уже выведенное, если true
