@@ -7,8 +7,11 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Класс представляет собой структуру JSON-объекта, возвращаемого на запрос %/api/search-results
+ *
+ * Этот и вложенные классы сгенерированы при помощи http://www.jsonschema2pojo.org
  */
 
+@SuppressWarnings("unused") // Некоторые методы используются только в рантайме из GSON'а
 public class SearchRequestResult {
 
     @SerializedName("meta")
@@ -34,6 +37,7 @@ public class SearchRequestResult {
     public void setCourses(List<Course> courses) {
         this.courses = courses;
     }
+
 }
 
 

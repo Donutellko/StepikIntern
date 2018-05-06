@@ -6,7 +6,18 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Имеет только те поля, которые требуются для отображения и хранения списка.
  */
+
+@SuppressWarnings("unused") // Некоторые методы используются только в рантайме из GSON'а
 public class Course {
+
+    /**
+     * Отметка о том, добавлен ли курс в избранное. По умолчанию не добавлен.
+     */
+    private boolean starred = false;
+
+    public boolean getStarred() { return starred; }
+
+    public void setStarred(boolean b) { this.starred = b; }
 
     @SerializedName("id")
     @Expose
@@ -31,17 +42,6 @@ public class Course {
     @SerializedName("course_cover")
     @Expose
     private String courseCover;
-
-    /**
-     * Конструктор для тестов
-     * @param title название курса courseTitle
-     * @param url Ссылка на обложку курса
-     */
-    public Course(int owner, String title, String url) {
-        this.courseOwner = owner;
-        this.courseTitle = title;
-        this.courseCover = url;
-    }
 
     public Integer getId() {
         return id;

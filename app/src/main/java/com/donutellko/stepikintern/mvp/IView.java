@@ -1,4 +1,4 @@
-package com.donutellko.stepikintern;
+package com.donutellko.stepikintern.mvp;
 
 import com.donutellko.stepikintern.api.Course;
 
@@ -50,4 +50,29 @@ public interface IView {
      * Сообщить о том, что не удалось подключиться
      */
     void showNoConnection();
+
+    /**
+     * Отобразить избранные курсы
+     *
+     * @param starred Список избранных курсов
+     */
+    void showStarred(List<Course> starred);
+
+    /**
+     * Очищает RecycleView
+     */
+    void cleanList();
+
+    /**
+     * Добавляет в конец списка следующий набор страниц
+     *
+     * @param courses список добавляемых курсов
+     * @param hasNext имеется ли ещё одна страница
+     */
+    void appendList(List<Course> courses, boolean hasNext);
+
+    /**
+     * Сообщает о том, что информация подгружается, не пряча уже выведенное, если true
+     */
+    void showUpdating(boolean b);
 }

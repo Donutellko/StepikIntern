@@ -1,6 +1,7 @@
 package com.donutellko.stepikintern;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.donutellko.stepikintern.api.StepikApi;
 
@@ -11,6 +12,10 @@ public class App extends Application {
 
     private Retrofit retrofit;
     private static StepikApi stepikApi;
+
+    public Context getContext() {
+        return getApplicationContext();
+    }
 
     @Override
     public void onCreate() {
@@ -27,4 +32,6 @@ public class App extends Application {
     public static StepikApi getStepikApi() {
         return stepikApi;
     }
+
+
 }

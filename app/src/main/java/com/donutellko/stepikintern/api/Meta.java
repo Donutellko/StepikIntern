@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * Содержит информацию, которая нужна для дозапроса следующей страницы результатов
  */
 
+@SuppressWarnings("unused") // Некоторые методы используются только в рантайме из GSON'а
 public class Meta {
 
     @SerializedName("page")
