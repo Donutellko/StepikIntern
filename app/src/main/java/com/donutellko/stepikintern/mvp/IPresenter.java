@@ -1,5 +1,8 @@
 package com.donutellko.stepikintern.mvp;
 
+import android.content.Context;
+
+import com.donutellko.stepikintern.PresenterImpl;
 import com.donutellko.stepikintern.api.Course;
 
 import java.util.List;
@@ -60,4 +63,8 @@ public interface IPresenter {
     String getLastQuery();
 
     void showError(Throwable t);
+
+    IModel.State getState();
+
+    Context getContext();
 }

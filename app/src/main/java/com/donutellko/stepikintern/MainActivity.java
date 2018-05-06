@@ -1,5 +1,6 @@
 package com.donutellko.stepikintern;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,8 @@ import java.util.List;
 public class MainActivity extends CourseListActivity implements IView {
 
     IPresenter presenter;
+    private long backPressedTime; // Время последнего нажатия кнопки назад
+    private static final long exitTimeout = 500; // Таймаут двойного нажатия кнопки назад
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +32,7 @@ public class MainActivity extends CourseListActivity implements IView {
         // setContentView вызван в суперклассе
 
         App.AppState savedState = ((App) getApplicationContext()).getAppState();
-        if (savedState != null) {
+        if (savedState != null) { // Если сохранили информацию при повороте и т.п.
             // Восстанавливаем состояние модели
             IModel model = savedState.model;
 
@@ -42,7 +45,6 @@ public class MainActivity extends CourseListActivity implements IView {
             presenter = new PresenterImpl(this);
             getStarred(); // изначально вывести избранное
         }
-//        setVisibility(true, false, false, false, false);
     }
 
     @Override
@@ -198,6 +200,11 @@ public class MainActivity extends CourseListActivity implements IView {
         setProgressVisible(b);
     }
 
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
+    }
+
     /**
      * Устанавливает ScrollListener, вызывающий метод подгрузки следующей страницы
      */
@@ -207,7 +214,8 @@ public class MainActivity extends CourseListActivity implements IView {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (!presenter.getHasNext()) return;
+                // Подгружаем только если есть что подгружать...
+                if (presenter.getState() != IModel.State.SEARCH || !presenter.getHasNext()) return;
 
                 int toBottom = countToBottom();
                 if (toBottom <= 8) // Если пользователь приблизился к концу
@@ -241,5 +249,24 @@ public class MainActivity extends CourseListActivity implements IView {
 
         Log.i("countToBottom()", "pos=" + pos + ", count=" + count + "; result=" + (count - pos));
         return count - pos;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - backPressedTime < exitTimeout)
+            super.onBackPressed();
+
+        backPressedTime = System.currentTimeMillis();
+
+        switch (presenter.getState()) {
+            case ERROR:
+            case SEARCH:
+            case LOADING:
+                getStarred();
+                break;
+            case STARRED:
+                presenter.getLastSearch();
+                break;
+        }
     }
 }

@@ -1,8 +1,13 @@
 package com.donutellko.stepikintern.mvp;
 
+import com.donutellko.stepikintern.PresenterImpl;
 import com.donutellko.stepikintern.api.Course;
 
 public interface IModel {
+
+    State getState();
+
+    void setState(State state);
 
     /**
      * Получить результат поискового запроса
@@ -47,4 +52,8 @@ public interface IModel {
     boolean getHasNext();
 
     int getPageNumber();
+
+    enum State {
+        STARRED, SEARCH, LOADING, ERROR
+    }
 }

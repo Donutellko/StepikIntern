@@ -1,5 +1,7 @@
 package com.donutellko.stepikintern.mvp;
 
+import android.content.Context;
+
 import com.donutellko.stepikintern.api.Course;
 
 import java.util.List;
@@ -74,4 +76,6 @@ public interface IView {
      * Сообщает о том, что информация подгружается, не пряча уже выведенное, если true
      */
     void showUpdating(boolean b);
+
+    Context getContext();
 }

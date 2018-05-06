@@ -1,6 +1,7 @@
 package com.donutellko.stepikintern;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Parcelable;
 
 import com.donutellko.stepikintern.api.Course;
@@ -15,14 +16,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class App extends Application {
 
-    private Retrofit retrofit;
     private static StepikApi stepikApi;
     private AppState appState;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        retrofit = new Retrofit
+        Retrofit retrofit = new Retrofit
                 .Builder()
                 .baseUrl("https://stepik.org/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -47,7 +47,7 @@ public class App extends Application {
         final IModel model;
         final Parcelable recyclerState;
 
-        public AppState(IModel model, Parcelable recyclerState) {
+        AppState(IModel model, Parcelable recyclerState) {
             this.model = model;
             this.recyclerState = recyclerState;
         }

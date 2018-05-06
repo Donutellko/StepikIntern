@@ -1,9 +1,13 @@
 package com.donutellko.stepikintern;
 
+import android.content.Context;
+
 import com.donutellko.stepikintern.api.Course;
 import com.donutellko.stepikintern.mvp.IModel;
 import com.donutellko.stepikintern.mvp.IPresenter;
 import com.donutellko.stepikintern.mvp.IView;
+
+import com.donutellko.stepikintern.mvp.IModel.State;
 
 import java.util.List;
 
@@ -28,23 +32,27 @@ public class PresenterImpl implements IPresenter {
         view.cleanList(); // При выведении первой страницы очищаем список
         view.showLoading();
 
+        model.setState(State.LOADING);
         model.getSearch(query);
     }
 
     @Override
     public void showSearch(List<Course> courses, String query) {
-        if (courses.size() == 0) {
+        if (courses == null || courses.size() == 0) {
             view.showEmptyList();
         } else {
             view.showList(courses, query);
         }
 
+        model.setState(State.SEARCH);
         view.showUpdating(false);
     }
 
     @Override
     public void getLastSearch() {
         view.showLoading();
+
+        model.setState(State.LOADING);
         model.getLastSearch();
     }
 
@@ -55,22 +63,26 @@ public class PresenterImpl implements IPresenter {
             return;
         }
 
+        model.setState(State.LOADING);
         model.getNextPage();
     }
 
     @Override
     public void showNextPage(List<Course> courses) {
+        model.setState(State.SEARCH);
         view.appendList(courses);
         view.showUpdating(false);
     }
 
     @Override
     public void getStarred() {
+        model.setState(State.LOADING);
         model.getStarred();
     }
 
     @Override
     public void showStarred(List<Course> starred) {
+        model.setState(State.STARRED);
         view.showStarred(starred);
     }
 
@@ -107,11 +119,22 @@ public class PresenterImpl implements IPresenter {
             view.showError(t);
         }
 
+        model.setState(State.ERROR);
         view.showUpdating(false);
     }
 
+    @Override
+    public State getState() {
+        return model.getState();
+    }
+
+    @Override
+    public Context getContext() {
+        return view.getContext();
+    }
 
     public IModel getModel() {
         return model;
     }
+
 }

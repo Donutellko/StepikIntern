@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.donutellko.stepikintern.api.Course;
 import com.donutellko.stepikintern.api.SearchRequestResult;
+import com.donutellko.stepikintern.data.StepikDbHelper;
 import com.donutellko.stepikintern.mvp.IModel;
 import com.donutellko.stepikintern.mvp.IPresenter;
 
@@ -26,9 +27,28 @@ class ModelImpl implements IModel {
 
     private SearchInfo currentSearch;
 
+    private StepikDbHelper stepikDbHelper;
+
+    private State state;
+
+    @Override
+    public State getState() {
+        return state;
+    }
+
+    @Override
+    public void setState(State state) {
+        this.state = state;
+    }
+
     ModelImpl(PresenterImpl presenter) {
         this.presenter = presenter;
+
+        stepikDbHelper = new StepikDbHelper(presenter.getContext());
+
         starredList = loadStarredList();
+
+        Log.i("Model", "Initialised.");
     }
 
     @Override
@@ -43,7 +63,8 @@ class ModelImpl implements IModel {
 
     @Override
     public void getLastSearch() {
-        assert currentSearch != null;
+        if (currentSearch == null)
+            presenter.showSearch(null, null);
 
         presenter.showSearch(currentSearch.courses, currentSearch.query);
     }
@@ -106,7 +127,7 @@ class ModelImpl implements IModel {
 
     @Override
     public void getStarred() {
-        currentSearch = null;
+//        currentSearch = null;
         isLoading = true;
 
         presenter.showStarred(starredList);
@@ -114,13 +135,20 @@ class ModelImpl implements IModel {
 
     @Override
     public void setStarred(Course course, boolean b) {
-        if (starredList.contains(course) && !b) starredList.remove(course);
-        else if (b) starredList.add(course);
+        if (starredList.contains(course) && !b) {
+            starredList.remove(course);
+            stepikDbHelper.removeStarred(course);
+        } else if (b) {
+            starredList.add(course);
+            stepikDbHelper.insertStarred(course);
+        }
     }
 
     @Override
     public boolean isStarred(Course course) {
-        return starredList.contains(course);
+        for (Course c :  starredList)
+            if (c.equals(course)) return true;
+        return false;
     }
 
     @Override
@@ -136,7 +164,7 @@ class ModelImpl implements IModel {
 
     @Override
     public boolean getHasNext() {
-        assert currentSearch != null;
+        if (currentSearch == null) return false;
         return currentSearch.hasNext;
     }
 
@@ -150,11 +178,7 @@ class ModelImpl implements IModel {
      * Получает сохранённый на устройстве список курсов
      */
     private List<Course> loadStarredList() {
-        ArrayList<Course> list = new ArrayList<>();
-
-        // TODO
-
-        return list;
+        return stepikDbHelper.getStarred();
     }
 
     public void setPresenter(PresenterImpl presenter) {
@@ -187,4 +211,5 @@ class ModelImpl implements IModel {
                     '}';
         }
     }
+
 }

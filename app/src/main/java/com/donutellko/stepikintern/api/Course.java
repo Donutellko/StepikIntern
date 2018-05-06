@@ -5,15 +5,33 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Имеет только те поля, которые требуются для отображения и хранения списка.
+ * Однако id постоянно меняется, как ни странно, поэтому на него полагаться нельзя.
  */
 
 @SuppressWarnings("unused") // Некоторые методы используются только в рантайме из GSON'а
 public class Course {
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Course)) return false;
+        Course c = (Course) obj;
+        return c.getCourseOwner().equals(courseOwner) && c.getCourseTitle().equals(courseTitle);
+    }
 
     /**
      * Отметка о том, добавлен ли курс в избранное. По умолчанию не добавлен.
      */
     private boolean starred = false;
+
+    public Course(int id, int owner, String title, String cover) {
+        this.id = id; // О_О у одного и того же курса бывает разный id
+        this.courseOwner = owner;
+        this.courseTitle = title;
+        this.courseCover = cover;
+    }
+
+    public Course(int id, String title, String cover, String owner) {
+
+    }
 
     public boolean getStarred() { return starred; }
 
