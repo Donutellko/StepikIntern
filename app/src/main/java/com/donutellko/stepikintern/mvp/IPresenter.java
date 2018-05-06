@@ -57,5 +57,7 @@ public interface IPresenter {
 
     int getPageNumber();
 
+    String getLastQuery();
+
     void showError(Throwable t);
 }

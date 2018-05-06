@@ -95,6 +95,11 @@ public class PresenterImpl implements IPresenter {
     }
 
     @Override
+    public String getLastQuery() {
+        return model.getLastQuery();
+    }
+
+    @Override
     public void showError(Throwable t) {
         if (t.getMessage().contains("Unable to resolve")) {
             view.showNoConnection();

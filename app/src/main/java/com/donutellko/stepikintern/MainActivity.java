@@ -98,20 +98,6 @@ public class MainActivity extends CourseListActivity implements IView {
         return true;
     }
 
-//    @Override
-//    protected void onNewIntent(Intent intent) {
-//        super.onNewIntent(intent);
-//
-//        Log.i("Intent", intent.getAction());
-//
-//        if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
-//            String query = intent.getStringExtra(SearchManager.QUERY);
-//            Log.i("Search", "query=" + query);
-//
-//            getSearch(query);
-//        }
-//    }
-
     private void getSearch(String query) {
         showUpdating(true);
         setTitle(query);
@@ -176,6 +162,12 @@ public class MainActivity extends CourseListActivity implements IView {
         } else {
             showText(text); // Отображаем вместо выдачи
             setVisibility(false, false, true, true, true);
+            refreshButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    presenter.getSearch(presenter.getLastQuery());
+                }
+            });
         }
     }
 
