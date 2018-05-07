@@ -24,5 +24,11 @@
 поэтому пришлось идентифицировать с помощью **course_title** и **course_owner**.
 Был не уверен по поводу того, нужно ли выводить ники авторов курса, как на сайте
 
-##
+## Скриншоты
 Протестировано на смартфоне *Meizu M2 Note (Android 5.0, 5.5" 1920x1080)*.
+
+<img src="https://pp.userapi.com/c830108/v830108858/f4439/2oPBJUZdj10.jpg" width="250">   <img src="https://pp.userapi.com/c846123/v846123858/434b0/7JFOAdUREiI.jpg" width="250">   <img src="https://pp.userapi.com/c846320/v846320671/42f49/ExCu17IJvnU.jpg" width="250">
+
+<img src="https://pp.userapi.com/c834202/v834202858/f9b12/-u3nwoWWDsE.jpg" width="250">   <img src="https://sun9-8.userapi.com/c840629/v840629671/7d832/zSCC16rKSUg.jpg" width="250">   <img src="https://pp.userapi.com/c846520/v846520671/4403b/DLb5PymimWM.jpg" width="250">
+
+<img src="https://pp.userapi.com/c824701/v824701858/12c7e2/VYrkmL-PhlM.jpg" height="250">
